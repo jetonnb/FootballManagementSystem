@@ -11,15 +11,14 @@
   text-align: center;
   margin-bottom: 30px;
 
-  ion-icon {
-    font-size: 80px;
-    margin-bottom: 10px;
-  }
-
-  h2 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin: 5px 0;
+  .login-logo {
+    width: 160px;
+    height: auto;
+    margin-bottom: 16px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    filter: drop-shadow(0 4px 12px rgba(0, 90, 180, 0.18));
   }
 
   p {

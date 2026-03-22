@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { NavController, ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 import { BookingService, Booking } from '../services/booking.service';
@@ -26,6 +26,8 @@ export class DashboardPage implements OnInit, OnDestroy {
   displayYear!: number;
   calendarDays: any[] = [];
   private bookingSub?: Subscription;
+  private notificationInterval?: ReturnType<typeof setInterval>;
+  private notifiedSlots = new Set<string>();
 
   private authService = inject(AuthService);
   private bookingService = inject(BookingService);
@@ -33,6 +35,7 @@ export class DashboardPage implements OnInit, OnDestroy {
   private modalCtrl = inject(ModalController);
   private alertCtrl = inject(AlertController);
   private loadingCtrl = inject(LoadingController);
+  private ngZone = inject(NgZone);
 
   constructor() {
     const today = new Date();
@@ -55,6 +58,8 @@ export class DashboardPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.initCalendar();
     this.loadBookings();
+    this.requestNotificationPermission();
+    this.startNotificationChecker();
   }
 
   initCalendar() {
@@ -117,12 +122,72 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.unsubscribeBookings();
+    this.stopNotificationChecker();
   }
 
   unsubscribeBookings() {
     if (this.bookingSub) {
       this.bookingSub.unsubscribe();
       this.bookingSub = undefined;
+    }
+  }
+
+  async requestNotificationPermission() {
+    if ('Notification' in window && Notification.permission === 'default') {
+      await Notification.requestPermission();
+    }
+  }
+
+  startNotificationChecker() {
+    this.notificationInterval = setInterval(() => {
+      this.ngZone.run(() => this.checkForEndedBookings());
+    }, 60000); // check every minute
+    // Also check immediately on load
+    this.checkForEndedBookings();
+  }
+
+  stopNotificationChecker() {
+    if (this.notificationInterval) {
+      clearInterval(this.notificationInterval);
+    }
+  }
+
+  checkForEndedBookings() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+
+    // Only notify for today's bookings
+    if (this.selectedDate !== todayStr) return;
+
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    for (const slot of this.currentSlots) {
+      if (!slot.booking) continue;
+
+      const [slotHourStr] = slot.startHour.split(':');
+      const slotHour = parseInt(slotHourStr, 10);
+
+      // Slot ends at slotHour + 1
+      const endHour = (slotHour + 1) % 24;
+
+      // Notify within the first 3 minutes after the slot ends
+      const justEnded = currentHour === endHour && currentMinute <= 3;
+
+      const notifKey = `${this.selectedDate}-${this.selectedCourt}-${slot.startHour}`;
+
+      if (justEnded && !this.notifiedSlots.has(notifKey)) {
+        this.notifiedSlots.add(notifKey);
+        const fushaName = `Fusha ${this.selectedCourt}`;
+        new Notification(`⚽ Loja ka mbaruar – ${fushaName}`, {
+          body: `Rezervimi i "${slot.booking.emriKlientit}" (${slot.startHour} – ${slot.timeStr.split(' - ')[1]}) ka përfunduar.`,
+          icon: '/FootballManagementSystem/assets/icon/logo.png',
+          badge: '/FootballManagementSystem/assets/icon/favicon.png',
+          tag: notifKey
+        });
+      }
     }
   }
 
@@ -195,12 +260,15 @@ export class DashboardPage implements OnInit, OnDestroy {
 
   async confirmDelete(booking: Booking) {
     const alert = await this.alertCtrl.create({
-      header: 'Konfirmim',
-      message: `A jeni i sigurt që dëshironi të fshini rezervimin për <strong>${booking.emriKlientit}</strong>?`,
+      header: 'Fshi Rezervimin',
+      subHeader: booking.emriKlientit,
+      message: 'A jeni i sigurt që dëshironi ta fshini këtë rezervim?',
+      cssClass: 'delete-confirm-alert',
       buttons: [
         {
           text: 'Jo, Anulo',
-          role: 'cancel'
+          role: 'cancel',
+          cssClass: 'alert-btn-cancel'
         },
         {
           text: 'Po, Fshije',
@@ -225,7 +293,25 @@ export class DashboardPage implements OnInit, OnDestroy {
   }
 
   async logout() {
-    await this.authService.logout();
-    this.navCtrl.navigateRoot('/login');
+    const alert = await this.alertCtrl.create({
+      header: 'Dilni',
+      message: 'A jeni i sigurt që dëshironi të dilni?',
+      buttons: [
+        {
+          text: 'Jo, Qëndro',
+          role: 'cancel'
+        },
+        {
+          text: 'Po, Dil',
+          role: 'destructive',
+          cssClass: 'alert-btn-danger',
+          handler: async () => {
+            await this.authService.logout();
+            this.navCtrl.navigateRoot('/login');
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 }

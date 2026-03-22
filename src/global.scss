@@ -108,3 +108,35 @@ ion-icon {
   font-weight: bold;
   color: #000;
 }
+
+/* Delete Confirmation Alert */
+.delete-confirm-alert {
+  .alert-title {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    color: #d32f2f !important;
+  }
+
+  .alert-sub-title {
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: #1a1a1a !important;
+    margin-top: 4px !important;
+  }
+
+  .alert-message {
+    font-size: 1.1rem !important;
+    color: #555 !important;
+    margin-top: 8px !important;
+  }
+
+  .alert-btn-cancel {
+    color: #555 !important;
+    font-weight: 600 !important;
+  }
+
+  .alert-btn-danger {
+    color: #d32f2f !important;
+    font-weight: bold !important;
+  }
+}
