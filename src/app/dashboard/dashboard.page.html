@@ -1,0 +1,137 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-wrap">Qendra Sportive "Roma"</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" class="logout-btn">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        DIL
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content color="light">
+  <!-- Date Selector -->
+  <div class="header-controls ion-padding-horizontal ion-padding-top">
+    <div class="date-container">
+      <ion-button id="open-date-modal" color="dark" fill="solid" class="custom-date-btn">
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        {{ formattedDateAlbanian }}
+      </ion-button>
+      
+      <ion-modal trigger="open-date-modal" id="custom-calendar-modal" [keepContentsMounted]="true">
+        <ng-template>
+          <ion-header class="ion-no-border">
+            <ion-toolbar color="primary">
+              <ion-title>Zgjidh Datën</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="closeCalendarModal()" style="font-size: 1.2rem; font-weight: bold;">Mbyll</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          
+          <ion-content class="ion-padding">
+             <div class="custom-calendar">
+               <div class="calendar-header">
+                 <ion-button fill="clear" (click)="prevMonth()" class="month-btn">
+                   <ion-icon name="chevron-back" slot="icon-only" color="dark"></ion-icon>
+                 </ion-button>
+                 <h2>{{ currentMonthName }} {{ displayYear }}</h2>
+                 <ion-button fill="clear" (click)="nextMonth()" class="month-btn">
+                   <ion-icon name="chevron-forward" slot="icon-only" color="dark"></ion-icon>
+                 </ion-button>
+               </div>
+               
+               <div class="calendar-days-header">
+                 <div class="day-name">Hë</div>
+                 <div class="day-name">Ma</div>
+                 <div class="day-name">Më</div>
+                 <div class="day-name">En</div>
+                 <div class="day-name">Pr</div>
+                 <div class="day-name">Sh</div>
+                 <div class="day-name">Di</div>
+               </div>
+               
+               <div class="calendar-grid">
+                 <div class="calendar-day" 
+                      *ngFor="let day of calendarDays" 
+                      [class.empty]="!day" 
+                      [class.selected]="day?.fullDate === selectedDate"
+                      (click)="day && selectDate(day.fullDate)">
+                   {{ day?.date }}
+                 </div>
+               </div>
+             </div>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+    </div>
+  </div>
+
+  <!-- Court Selector -->
+  <div class="segment-container ion-padding">
+    <ion-segment [(ngModel)]="selectedCourt" (ionChange)="onCourtChange()" class="large-segment" [ngClass]="selectedCourt === 1 ? 'fusha-1-theme' : 'fusha-2-theme'" mode="ios">
+      <ion-segment-button [value]="1">
+        <ion-label>FUSHA 1</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [value]="2">
+        <ion-label>FUSHA 2</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- Booking List -->
+  <div class="list-container">
+    <ng-container *ngIf="!isLoading; else loadingTemplate">
+      <ion-list class="slots-list" [ngClass]="selectedCourt === 1 ? 'fusha-1-theme' : 'fusha-2-theme'">
+        <ion-item *ngFor="let slot of currentSlots" class="slot-item ion-margin-bottom" lines="none">
+          
+          <div class="slot-content">
+            <div class="slot-header">
+              <span class="booking-time">{{ slot.timeStr }}</span>
+              <ion-badge *ngIf="slot.booking" color="danger">E ZËNË</ion-badge>
+              <ion-badge *ngIf="!slot.booking" color="success">E LIRË</ion-badge>
+            </div>
+            
+            <div class="slot-body">
+              <div class="booking-name" *ngIf="slot.booking">
+                <ion-icon name="person-circle-outline" color="dark"></ion-icon>
+                {{ slot.booking.emriKlientit }}
+              </div>
+              <div class="booking-free" *ngIf="!slot.booking">
+                Asnjë person
+              </div>
+            </div>
+
+            <div class="slot-actions">
+              <!-- Free slot -->
+              <ion-button *ngIf="!slot.booking" color="success" (click)="openBookingModal(slot)" expand="block" class="action-btn">
+                <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+                REZERVO
+              </ion-button>
+              
+              <!-- Booked slot -->
+              <ng-container *ngIf="slot.booking">
+                <ion-button color="primary" (click)="openBookingModal(slot)" class="action-btn half-btn">
+                  NDRYSHO
+                </ion-button>
+                <ion-button color="danger" (click)="confirmDelete(slot.booking)" class="action-btn half-btn">
+                  FSHIJ
+                </ion-button>
+              </ng-container>
+            </div>
+          </div>
+          
+        </ion-item>
+      </ion-list>
+    </ng-container>
+
+    <ng-template #loadingTemplate>
+      <div class="ion-text-center center-loading">
+        <ion-spinner name="crescent" color="primary"></ion-spinner>
+        <p>Duke ngarkuar rezervimet...</p>
+      </div>
+    </ng-template>
+  </div>
+
+</ion-content>

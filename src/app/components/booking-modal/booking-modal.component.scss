@@ -1,0 +1,42 @@
+.read-only-item {
+  --background: #f4f5f8;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  
+  h3 {
+    font-size: 1.1rem;
+    color: #666;
+    margin: 0;
+  }
+  
+  p {
+    font-size: 1.4rem;
+    color: #000;
+    margin: 5px 0 0 0;
+  }
+}
+
+.input-item {
+  margin-bottom: 25px;
+  --background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  --padding-start: 16px;
+  
+  ion-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+}
+
+.action-buttons {
+  margin-top: 30px;
+}
+
+.large-btn {
+  --min-height: 60px;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}

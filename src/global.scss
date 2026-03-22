@@ -1,0 +1,110 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import '@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* 
+ * ----------------------------------------------------------------------------
+ * ACCESSIBLE GLOBAL STYLES FOR FOOTBALL MANAGEMENT SYSTEM
+ * ----------------------------------------------------------------------------
+ * Target Audience: 55+ year-old owner.
+ * Requirements: Large text (min 1.2rem), large touch targets (min 48px), high contrast.
+ */
+
+:root {
+  /* Increase base font size globally */
+  font-size: 18px; /* makes 1rem = 18px */
+}
+
+body {
+  font-size: 1.2rem;
+  --ion-text-color: #1a1a1a;
+  --ion-background-color: #f4f5f8;
+}
+
+/* Ensure all buttons are highly clickable */
+ion-button {
+  --min-height: 56px; /* 56px height for big fingers */
+  font-size: 1.25rem;
+  font-weight: bold;
+  --border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Large input fields */
+ion-item {
+  --min-height: 56px;
+  --padding-start: 16px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  --border-color: #cccccc;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+ion-input, ion-datetime-button {
+  font-size: 1.25rem;
+}
+
+/* Alerts and Modals styling */
+.alert-wrapper, .modal-wrapper {
+  border-radius: 12px;
+}
+
+/* Court distinct colors */
+.fusha-1-theme {
+  --ion-color-primary: #1e5c20; /* Dark Green */
+  --ion-color-primary-rgb: 30, 92, 32;
+}
+
+.fusha-2-theme {
+  --ion-color-primary: #0a3d6e; /* Dark Blue */
+  --ion-color-primary-rgb: 10, 61, 110;
+}
+
+/* Make headers big */
+ion-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* Make icons big if used */
+ion-icon {
+  font-size: 32px;
+}
+
+/* Booking list texts */
+.booking-time {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.booking-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #000;
+}

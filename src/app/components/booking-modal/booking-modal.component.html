@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar [color]="courtId === 1 ? 'success' : 'primary'">
+    <ion-title>{{ booking ? 'Ndrysho Rezervimin' : 'Rezervo Fushën' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()">Mbyll</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="info-section">
+    <ion-item lines="none" class="read-only-item">
+      <ion-icon name="calendar-outline" slot="start" color="medium"></ion-icon>
+      <ion-label>
+        <h3>Data:</h3>
+        <p><strong>{{ formattedDateAlbanian }}</strong></p>
+      </ion-label>
+    </ion-item>
+    
+    <ion-item lines="none" class="read-only-item">
+      <ion-icon name="time-outline" slot="start" color="medium"></ion-icon>
+      <ion-label>
+        <h3>Ora:</h3>
+        <p><strong>{{ time }}</strong></p>
+      </ion-label>
+    </ion-item>
+    
+    <ion-item lines="none" class="read-only-item">
+      <ion-icon name="football-outline" slot="start" color="medium"></ion-icon>
+      <ion-label>
+        <h3>Fusha:</h3>
+        <p><strong>{{ fushaName }}</strong></p>
+      </ion-label>
+    </ion-item>
+  </div>
+
+  <form [formGroup]="bookingForm" (ngSubmit)="save()" class="ion-margin-top">
+    <ion-item lines="none" class="input-item">
+      <ion-label position="stacked">Emri i Personit</ion-label>
+      <ion-input type="text" formControlName="emriKlientit" placeholder="Shkruaj emrin..."></ion-input>
+    </ion-item>
+
+    <div class="action-buttons">
+      <ion-button expand="block" color="success" type="submit" [disabled]="bookingForm.invalid || isSaving" class="large-btn margin-bottom">
+        <ion-icon name="save-outline" slot="start"></ion-icon>
+        RUAJ
+      </ion-button>
+      
+      <ion-button expand="block" color="medium" (click)="cancel()" [disabled]="isSaving" class="large-btn">
+        <ion-icon name="close-circle-outline" slot="start"></ion-icon>
+        ANULO
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

@@ -1,0 +1,31 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title class="ion-text-wrap">Hyrje - Qendra Sportive "Roma"</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <div class="header-section">
+      <ion-icon name="football-outline" color="primary"></ion-icon>
+      <h2>Qendra Sportive "Roma"</h2>
+      <p>Hyni me llogarinë tuaj për të menaxhuar fushat.</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <ion-item lines="none" class="input-item">
+        <ion-label position="stacked">Përdoruesi (Username)</ion-label>
+        <ion-input type="text" formControlName="username" placeholder="Shkruaj emrin e përdoruesit..."></ion-input>
+      </ion-item>
+
+      <ion-item lines="none" class="input-item">
+        <ion-label position="stacked">Fjalëkalimi</ion-label>
+        <ion-input type="password" formControlName="password" placeholder="******"></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" type="submit" [disabled]="loginForm.invalid" color="primary" class="login-btn">
+        HYR
+      </ion-button>
+    </form>
+  </div>
+</ion-content>
